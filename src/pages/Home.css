@@ -1,0 +1,38 @@
+  .home {
+    column-count: 2;
+    padding: 20x 50px;
+    width: 90%;
+    text-align: center;
+    padding-top: 100px;
+  }
+  .home h1{
+    padding-top: 0;
+    padding-left: 1px;
+    text-align: left;
+  }
+  .home p{
+    font-size: 18px;
+    padding-left: 7px;
+    text-align: left;
+    margin-bottom: 15px;
+  }
+  .home img{
+    max-width:80%;
+    width: inherit;
+  } 
+
+  .resume{
+    display: block;
+    text-decoration: none;
+    color: #777;
+    border: 1px solid #777;
+    padding: 12px 34px;
+    font-size: 13px;
+    /* background: transparent; */
+    /* position: relative; */
+    cursor: pointer;
+  }
+  .resume:hover{
+        background-color: #777;
+        color: white;
+  }  

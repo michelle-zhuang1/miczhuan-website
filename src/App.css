@@ -1,0 +1,108 @@
+/* *{
+  margin:0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+} */
+
+.app {
+  background-color: white;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+h1 {
+  color: #777;
+  font-size: 40px;
+  text-align: center;
+}
+
+p {
+  color: #777;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 24px;
+  margin-bottom: 0px;
+  text-align: center;
+  padding: 10px;
+  padding-left: 15%;
+  padding-right: 15%;
+}
+
+/* --- Header CSS --- */
+.header {
+  min-height: 100vh;
+  padding-top: 15%;
+  width: 100%;
+  background-color: #adcbe3;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+}
+
+.header h1 {
+  color: white;
+  font-size: 75px;
+  text-shadow: 4px 4px #4b86b4;
+  text-align: center;
+}
+
+#line {
+  color: white;
+  font-size: 24px;
+  text-shadow: 1px 1px #4b86b4;
+  text-align: center;
+}
+.social-links p {
+  display: flex;
+  justify-content: center; /* Centers links horizontally */
+  gap: 15px; /* Adds space between icons */
+  margin-top: 10px;
+}
+
+.social-links a {
+  font-size: 24px; /* Adjust icon size */
+  color: black; /* Change color if needed */
+  text-decoration: none;
+}
+
+.social-links a:hover {
+  color: #0077b5; /* Change to LinkedIn blue or preferred hover color */
+}
+
+/* --- Footer CSS --- */
+
+
+
+
+/* @media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+} */
