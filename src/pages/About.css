@@ -1,0 +1,23 @@
+.aboutInfo {
+    text-align: center;
+  }
+  .aboutInfo img{
+    max-width:80%;
+    width: inherit;
+  } 
+
+  .aboutInfo .resume{
+    display: block;
+    text-decoration: none;
+    color: #777;
+    border: 1px solid #777;
+    padding: 13px 30px;
+    font-size: 13px;
+    width: fit-content;
+    margin: 30px auto 0 auto;
+    cursor: pointer;
+  }
+  /* .resume:hover{
+        background-color: #777;
+        color: white;
+  }   */

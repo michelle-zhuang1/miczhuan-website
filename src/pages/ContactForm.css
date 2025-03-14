@@ -1,21 +1,24 @@
 .contactForm {
-    width: 100%;
+    width:100%;
     max-width: 400px;
-    margin: auto;
+    margin: 0 auto;
+    text-align: center;
     padding: 20px;
-    background: #f4f4f4;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 5px #777;
   }
   
   h2 {
     text-align: center;
+    color: #5c5b5b;
   }
   
   input, textarea {
-    width: 100%;
+    display: block;
+    width: 90%;
+    max-width: 750px;
     padding: 10px;
-    margin: 10px 0;
+    margin: 10px auto;
     border: 1px solid #ccc;
     border-radius: 5px;
   }
@@ -25,17 +28,21 @@
   }
   
   button {
-    width: 100%;
-    padding: 10px;
-    background-color: blue;
+    display: block;
+    padding: 13px 30px;
+    /* margin: 10px auto; */
+    margin: 30px auto 0 auto;
+    border: 1px solid #777;
+    background-color: #4b86b4;
     color: white;
-    border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 13px;
   }
   
   button:hover {
-    background-color: darkblue;
+    background-color: white;
+    color: #4b86b4;
   }
   
   .status {

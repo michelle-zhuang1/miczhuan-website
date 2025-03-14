@@ -19,15 +19,49 @@ s3 = boto3.client(
     aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
     aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
 )
+print(f"Connected to S3 bucket: {S3_BUCKET}")
 
 def get_db_connection():
-    conn = psycopg2.connect(
-        dbname=os.getenv("DB_NAME"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASS"),
-        host=os.getenv("DB_HOST"),
-        port=os.getenv("DB_PORT"))
-    return conn, conn.cursor()
+    try:
+        conn = psycopg2.connect(
+            dbname=os.getenv("DB_NAME"),
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASS"),
+            host=os.getenv("DB_HOST"),
+            port=os.getenv("DB_PORT", 5432))
+        print("Connected to database!")
+        return conn, conn.cursor()
+    except Exception as e:
+        print(f"Error connecting to database: {e}")
+        return None, None
+
+
+# Route to insert contact form data into PostgreSQL
+@app.route("/contact", methods=["POST"])
+def submit_contact():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "Invalid JSON data"}), 400
+    name = data.get("name")
+    email = data.get("email")
+    message = data.get("message")
+
+    if not name or not email or not message:
+        return jsonify({"error": "Missing required fields"}), 400
+    
+    try:
+        conn, cursor = get_db_connection()
+        cursor.execute("INSERT INTO contacts (name, email, message) VALUES (%s, %s, %s)", (name, email, message))
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({"success": "Message received!"}), 200
+    
+    except Exception as e:
+        print(f"Error inserting contact form data: {e}")
+        return jsonify({"error": str(e)}), 500
 
 # Route to upload files via HTTP request
 @app.route("/upload", methods=["POST"])
@@ -35,6 +69,7 @@ def upload_file():
     conn, cursor = get_db_connection()
 
     if "file" not in request.files:
+        print(f"Error getting request file")
         return jsonify({"error": "No file part"}), 400
 
     file = request.files["file"]
@@ -52,25 +87,6 @@ def upload_file():
     conn.commit()
     
     return jsonify({"id": cursor.fetchone()[0], "filename": filename, "file_url": file_url})
-
-
-
-# # PostgreSQL Connection
-
-# cursor = conn.cursor()
-
-# # Create table if not exists
-# cursor.execute("""
-# CREATE TABLE IF NOT EXISTS images (
-#     id SERIAL PRIMARY KEY,
-#     filename TEXT NOT NULL,
-#     file_url TEXT NOT NULL
-# );
-# """)
-# conn.commit()
-
-
-
 
 # Route to fetch all uploaded files
 @app.route("/files", methods=["GET"])

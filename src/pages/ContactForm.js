@@ -19,23 +19,27 @@ function ContactForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:3000/contact", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(formData),
+            const response = await fetch("http://127.0.0.1:5000/contact", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"  
+                },
+                body: JSON.stringify(formData)
             });
-      
+    
             const result = await response.json();
-            if (response.ok) {
-              setStatus("Message sent successfully!");
-              setFormData({ name: "", email: "", message: "" }); // Clear form
-            } else {
-              setStatus("Failed to send message.");
+            console.log("Result:", result);
+            setStatus(result.message)
+            if (result.success) { 
+                alert("Message sent!");
+                setFormData({ name: "", email: "", message: "" }); // Clear form
             }
-          } catch (error) {
-            setStatus("Error sending message.");
-          }
-        };
+        } catch (error) {
+            console.error("Error submitting form:", error);
+        }
+
+    };
+
     
     return (
         <div className="contact-form">
