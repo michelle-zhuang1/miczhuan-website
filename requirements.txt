@@ -1,0 +1,12 @@
+"""
+# Create a virtual environment 
+python -m venv myenv
+source myenv/bin/activate
+"""
+
+# Install the required packages
+flask 
+flask_cors 
+psycopg2 
+gunicorn 
+

@@ -2,7 +2,6 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 // import { Home, About } from './pages';
 // import { Header, NavBar, Footer } from './components';
-import axios from 'axios';
 
 import Home from './pages/Home';
 import About from './pages/About';

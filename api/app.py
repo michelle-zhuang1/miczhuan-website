@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["https://miczhuan-website.vercel.app"])
 
 # Create an S3 client
 S3_BUCKET = os.getenv("AWS_S3_BUCKET")
