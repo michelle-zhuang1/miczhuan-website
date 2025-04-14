@@ -1,5 +1,5 @@
 import os
-import boto3
+# import boto3
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import psycopg2
@@ -10,16 +10,6 @@ load_dotenv()
 
 app = Flask(__name__)
 CORS(app, origins=["https://miczhuan-website.vercel.app"])
-
-# Create an S3 client
-S3_BUCKET = os.getenv("AWS_S3_BUCKET")
-S3_REGION = os.getenv("AWS_REGION")
-s3 = boto3.client(
-    "s3",
-    aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-)
-print(f"Connected to S3 bucket: {S3_BUCKET}")
 
 def get_db_connection():
     try:
@@ -34,7 +24,6 @@ def get_db_connection():
     except Exception as e:
         print(f"Error connecting to database: {e}")
         return None, None
-
 
 # Route to insert contact form data into PostgreSQL
 @app.route("/contact", methods=["POST"])
@@ -62,6 +51,18 @@ def submit_contact():
     except Exception as e:
         print(f"Error inserting contact form data: {e}")
         return jsonify({"error": str(e)}), 500
+"""
+Currently not in use
+
+# Create an S3 client
+S3_BUCKET = os.getenv("AWS_S3_BUCKET")
+S3_REGION = os.getenv("AWS_REGION")
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+)
+print(f"Connected to S3 bucket: {S3_BUCKET}")
 
 # Route to upload files via HTTP request
 @app.route("/upload", methods=["POST"])
@@ -94,7 +95,8 @@ def get_files():
     conn, cursor = get_db_connection()
     cursor.execute("SELECT id, filename, file_url FROM images")
     files = cursor.fetchall()
-    return jsonify([{"id": row[0], "filename": row[1], "file_url": row[2]} for row in files])
+    return jsonify([{"id": row[0], "filename": row[1], "file_url": row[2]} for row in files]) 
+"""
 
 if __name__ == "__main__":
     app.run(debug=True)
