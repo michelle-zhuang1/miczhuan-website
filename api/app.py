@@ -50,12 +50,27 @@ def get_contacts():
 
 def get_db_connection():
     try:
-        conn = psycopg2.connect(
-            dbname=os.getenv("DB_NAME"),
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASSWORD"),
-            host=os.getenv("DB_HOST"),
-            port=os.getenv("DB_PORT", 5432))
+        # Try DATABASE_URL first, then fall back to individual variables
+        database_url = os.getenv("DATABASE_URL")
+        
+        if database_url:
+            print(f"Using DATABASE_URL connection")
+            conn = psycopg2.connect(database_url)
+        else:
+            # Debug logging for individual variables
+            print(f"Using individual environment variables:")
+            print(f"  DB_NAME: {os.getenv('DB_NAME')}")
+            print(f"  DB_USER: {os.getenv('DB_USER')}")
+            print(f"  DB_HOST: {os.getenv('DB_HOST')}")
+            print(f"  DB_PORT: {os.getenv('DB_PORT', 5432)}")
+            print(f"  DB_PASSWORD: {'***' if os.getenv('DB_PASSWORD') else 'NOT SET'}")
+            
+            conn = psycopg2.connect(
+                dbname=os.getenv("DB_NAME"),
+                user=os.getenv("DB_USER"),
+                password=os.getenv("DB_PASSWORD"),
+                host=os.getenv("DB_HOST"),
+                port=os.getenv("DB_PORT", 5432))
         cursor = conn.cursor()
         
         # Create table if it doesn't exist
