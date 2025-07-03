@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: miczhuan-website-api
+    env: python
+    buildCommand: pip install -r api/requirements.txt
+    startCommand: cd api && gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0

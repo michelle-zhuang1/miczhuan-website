@@ -1,31 +1,85 @@
 import os
+import sqlite3
 # import boto3
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import psycopg2
 from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, origins=["https://miczhuan-website.vercel.app"])
+CORS(app, origins=["https://miczhuan-website.vercel.app", "http://localhost:3000", "https://miczhuan-website.onrender.com"])
+
+@app.route("/", methods=["GET"])
+def health_check():
+    return jsonify({"status": "API is running", "message": "Flask backend is healthy"}), 200
+
+@app.route("/contacts", methods=["GET"])
+def get_contacts():
+    """Debug endpoint to view all contacts"""
+    try:
+        conn, cursor = get_db_connection()
+        if not conn:
+            return jsonify({"error": "Database connection failed"}), 500
+            
+        cursor.execute("SELECT id, name, email, message, created_at FROM contacts ORDER BY created_at DESC")
+        contacts = cursor.fetchall()
+        
+        result = []
+        for contact in contacts:
+            result.append({
+                "id": contact[0],
+                "name": contact[1], 
+                "email": contact[2],
+                "message": contact[3],
+                "created_at": contact[4]
+            })
+        
+        cursor.close()
+        conn.close()
+        
+        return jsonify({
+            "contacts": result,
+            "count": len(result)
+        }), 200
+        
+    except Exception as e:
+        print(f"Error getting contacts: {e}")
+        return jsonify({"error": str(e)}), 500
 
 def get_db_connection():
     try:
-        conn = psycopg2.connect(
-            dbname=os.getenv("DB_NAME"),
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASS"),
-            host=os.getenv("DB_HOST"),
-            port=os.getenv("DB_PORT", 5432))
-        print("Connected to database!")
-        return conn, conn.cursor()
+        # Create database file if it doesn't exist
+        db_path = os.path.join(os.path.dirname(__file__), 'contacts.db')
+        print(f"Database path: {db_path}")
+        print(f"Database exists: {os.path.exists(db_path)}")
+        
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        
+        # Create table if it doesn't exist
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS contacts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                email TEXT NOT NULL,
+                message TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+        conn.commit()
+        
+        # Check if table was created and count existing records
+        cursor.execute("SELECT COUNT(*) FROM contacts")
+        count = cursor.fetchone()[0]
+        print(f"Connected to SQLite database! Current record count: {count}")
+        return conn, cursor
     except Exception as e:
         print(f"Error connecting to database: {e}")
         return None, None
 
-# Route to insert contact form data into PostgreSQL
+# Route to insert contact form data into SQLite
 @app.route("/contact", methods=["POST"])
 def submit_contact():
     data = request.get_json()
@@ -41,15 +95,32 @@ def submit_contact():
     
     try:
         conn, cursor = get_db_connection()
-        cursor.execute("INSERT INTO contacts (name, email, message) VALUES (%s, %s, %s)", (name, email, message))
-
+        if not conn or not cursor:
+            print("Failed to get database connection")
+            return jsonify({"error": "Database connection failed"}), 500
+            
+        print(f"Inserting contact: name={name}, email={email}, message={message[:50]}...")
+        cursor.execute("INSERT INTO contacts (name, email, message) VALUES (?, ?, ?)", (name, email, message))
+        
+        # Verify the insert worked
+        row_id = cursor.lastrowid
+        print(f"Inserted record with ID: {row_id}")
+        
         conn.commit()
+        
+        # Double-check the record was saved
+        cursor.execute("SELECT COUNT(*) FROM contacts")
+        total_count = cursor.fetchone()[0]
+        print(f"Total records after insert: {total_count}")
+        
         cursor.close()
         conn.close()
-        return jsonify({"success": "Message received!"}), 200
+        return jsonify({"success": "Message received!", "record_id": row_id}), 200
     
     except Exception as e:
         print(f"Error inserting contact form data: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 """
 Currently not in use
@@ -99,4 +170,6 @@ def get_files():
 """
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    import os
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)

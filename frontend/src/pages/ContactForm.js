@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import styles from "./ContactForm.css";
+import "./ContactForm.css";
 
 function ContactForm() {
     const [formData, setFormData] = useState({
@@ -8,7 +8,8 @@ function ContactForm() {
         message: ""
     });
     
-    const [status, setStatus] = useState(null); // Success/Error message
+    const [status, setStatus] = useState({ message: "", type: "" }); // Success/Error message
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Handle input changes
     const handleChange = (e) => {
@@ -18,8 +19,16 @@ function ContactForm() {
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
+        setStatus({ message: "", type: "" });
+        
         try {
-            const response = await fetch("http://127.0.0.1:5000/contact", {
+            const apiUrl = process.env.REACT_APP_API_URL || "http://127.0.0.1:5000";
+            console.log("API URL being used:", apiUrl);
+            console.log("Full endpoint:", `${apiUrl}/contact`);
+            console.log("Environment variables:", process.env);
+            
+            const response = await fetch(`${apiUrl}/contact`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"  
@@ -27,17 +36,26 @@ function ContactForm() {
                 body: JSON.stringify(formData)
             });
     
+            console.log("Response status:", response.status);
+            console.log("Response headers:", response.headers);
+            
             const result = await response.json();
             console.log("Result:", result);
-            setStatus(result.message)
-            if (result.success) { 
-                alert("Message sent!");
+            
+            if (response.ok && result.success) {
+                setStatus({ message: "Message sent successfully! Thank you for reaching out.", type: "success" });
                 setFormData({ name: "", email: "", message: "" }); // Clear form
+            } else {
+                setStatus({ message: result.error || "Failed to send message. Please try again.", type: "error" });
             }
         } catch (error) {
-            console.error("Error submitting form:", error);
+            console.error("Detailed error submitting form:", error);
+            console.error("Error type:", error.name);
+            console.error("Error message:", error.message);
+            setStatus({ message: `Network error: ${error.message}. Please check your connection and try again.`, type: "error" });
+        } finally {
+            setIsSubmitting(false);
         }
-
     };
 
     
@@ -51,6 +69,11 @@ function ContactForm() {
                 </p>
             </div>
             <h2>Or Contact Me Here:</h2>
+            {process.env.NODE_ENV === 'development' && (
+                <div style={{background: '#f0f0f0', padding: '10px', marginBottom: '10px', fontSize: '12px'}}>
+                    Debug Info: API URL = {process.env.REACT_APP_API_URL || "localhost:5000 (default)"}
+                </div>
+            )}
             <form onSubmit={handleSubmit}>  
                 <input 
                     type="text"
@@ -78,10 +101,16 @@ function ContactForm() {
                     placeholder="Message"
                     required
                 />
-                <button type="submit">Submit</button>
+                <button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Sending..." : "Submit"}
+                </button>
 
             </form> 
-        {status && <p className={styles.status}>{status}</p>}
+            {status.message && (
+                <div className={`status-message ${status.type}`}>
+                    {status.message}
+                </div>
+            )}
         </div> 
     );
 }
