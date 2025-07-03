@@ -1,8 +1,8 @@
 import os
-import sqlite3
 # import boto3
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import psycopg2
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -50,20 +50,20 @@ def get_contacts():
 
 def get_db_connection():
     try:
-        # Create database file if it doesn't exist
-        db_path = os.path.join(os.path.dirname(__file__), 'contacts.db')
-        print(f"Database path: {db_path}")
-        print(f"Database exists: {os.path.exists(db_path)}")
-        
-        conn = sqlite3.connect(db_path)
+        conn = psycopg2.connect(
+            dbname=os.getenv("DB_NAME"),
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASSWORD"),
+            host=os.getenv("DB_HOST"),
+            port=os.getenv("DB_PORT", 5432))
         cursor = conn.cursor()
         
         # Create table if it doesn't exist
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS contacts (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                email TEXT NOT NULL,
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL,
                 message TEXT NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
@@ -73,13 +73,13 @@ def get_db_connection():
         # Check if table was created and count existing records
         cursor.execute("SELECT COUNT(*) FROM contacts")
         count = cursor.fetchone()[0]
-        print(f"Connected to SQLite database! Current record count: {count}")
+        print(f"Connected to PostgreSQL database! Current record count: {count}")
         return conn, cursor
     except Exception as e:
         print(f"Error connecting to database: {e}")
         return None, None
 
-# Route to insert contact form data into SQLite
+# Route to insert contact form data into PostgreSQL
 @app.route("/contact", methods=["POST"])
 def submit_contact():
     data = request.get_json()
@@ -100,10 +100,11 @@ def submit_contact():
             return jsonify({"error": "Database connection failed"}), 500
             
         print(f"Inserting contact: name={name}, email={email}, message={message[:50]}...")
-        cursor.execute("INSERT INTO contacts (name, email, message) VALUES (?, ?, ?)", (name, email, message))
+        cursor.execute("INSERT INTO contacts (name, email, message) VALUES (%s, %s, %s)", (name, email, message))
         
-        # Verify the insert worked
-        row_id = cursor.lastrowid
+        # Verify the insert worked (PostgreSQL way)
+        cursor.execute("SELECT LASTVAL()")
+        row_id = cursor.fetchone()[0]
         print(f"Inserted record with ID: {row_id}")
         
         conn.commit()
