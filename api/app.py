@@ -5,11 +5,39 @@ from flask_cors import CORS
 import psycopg2
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+# Load environment variables (only for local development)
+if os.getenv("RENDER") is None:  # Render sets this automatically
+    load_dotenv()
+    print("Loading .env file for local development")
+else:
+    print("Running on Render - using platform environment variables")
 
 app = Flask(__name__)
 CORS(app, origins=["https://miczhuan-website.vercel.app", "http://localhost:3000", "https://miczhuan-website.onrender.com"])
+
+# Debug: Print all environment variables at startup
+print("=== ENVIRONMENT VARIABLES DEBUG ===")
+print(f"RENDER: {os.getenv('RENDER')}")
+print(f"DATABASE_URL: {'SET' if os.getenv('DATABASE_URL') else 'NOT SET'}")
+print(f"DB_NAME: {os.getenv('DB_NAME')}")
+print(f"DB_USER: {os.getenv('DB_USER')}")  
+print(f"DB_HOST: {os.getenv('DB_HOST')}")
+print(f"DB_PORT: {os.getenv('DB_PORT')}")
+print(f"DB_PASSWORD: {'SET' if os.getenv('DB_PASSWORD') else 'NOT SET'}")
+print("=== END DEBUG ===")
+
+@app.route("/debug-env", methods=["GET"])
+def debug_env():
+    """Debug endpoint to check environment variables"""
+    return jsonify({
+        "render": os.getenv("RENDER"),
+        "database_url_set": bool(os.getenv("DATABASE_URL")),
+        "db_name": os.getenv("DB_NAME"),
+        "db_user": os.getenv("DB_USER"),
+        "db_host": os.getenv("DB_HOST"),
+        "db_port": os.getenv("DB_PORT"),
+        "db_password_set": bool(os.getenv("DB_PASSWORD"))
+    })
 
 @app.route("/", methods=["GET"])
 def health_check():
