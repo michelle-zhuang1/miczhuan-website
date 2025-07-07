@@ -1,5 +1,6 @@
 .aboutInfo {
     text-align: center;
+    padding: 40x;
   }
   .aboutInfo img{
     max-width:80%;
@@ -11,7 +12,7 @@
     text-decoration: none;
     color: #777;
     border: 1px solid #777;
-    padding: 13px 30px;
+    /* padding: 13px 30px; */
     font-size: 13px;
     width: fit-content;
     margin: 30px auto 0 auto;

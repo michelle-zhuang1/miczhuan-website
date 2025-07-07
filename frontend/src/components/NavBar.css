@@ -56,11 +56,11 @@ ul li a:hover {
 
 @media only screen and (max-width: 1000px) {
     .menu-icon {
-        margin: 0 auto;
+        /* margin: 0 auto; */
         display: flex;
-        top: 1rem; 
-        right: 1rem; 
-        padding: 0.5rem; 
+        justify-content: flex-end;
+        align-items: flex-start;
+        padding: 1rem;  /* Equal padding on all sides */
     }
 
     .navbar-container {
