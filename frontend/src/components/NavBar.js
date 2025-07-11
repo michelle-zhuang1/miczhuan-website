@@ -24,6 +24,11 @@ function NavBar() {
                     </Link>
                 </li>
                 <li>
+                    <Link to="/projects" className="nav-links" onClick={() => setMenuOpen(false)}>
+                        Projects
+                    </Link>
+                </li>
+                <li>
                     <Link to="/contact" className="nav-links" onClick={() => setMenuOpen(false)}>
                         Contact
                     </Link>
