@@ -129,7 +129,6 @@
 
 .image-container {
     text-align: center;
-    isolation: isolate;
 }
 
 .image-container img {
@@ -140,18 +139,10 @@
     margin: 0 auto;
     border-radius: var(--radius-image);
     transition: transform 0.3s ease;
-    /* Keep these images permanently on their own GPU layer (rather than
-       promoting only on hover). Safari has a compositing bug where an
-       SVG element elsewhere on the page using a <mask> can cause nearby
-       siblings to briefly vanish at the exact moment they're promoted to
-       a layer, which happens on hover if not already layered. */
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    will-change: transform;
 }
 
 .image-container img:hover {
-    transform: translateZ(0) scale(1.03);
+    transform: scale(1.03);
     z-index: 10;
 }
 
