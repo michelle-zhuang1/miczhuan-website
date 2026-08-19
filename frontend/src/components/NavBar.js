@@ -2,15 +2,16 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './NavBar.css';
 
-function NavBar() { 
+function NavBar() {
     const [menuOpen, setMenuOpen] = useState(false);
 
     return (
         <div className="navbar-container">
+            <Link to="/" className="navbar-brand" onClick={() => setMenuOpen(false)}>
+                Michelle Zhuang
+            </Link>
             <div className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>
                 <i className={menuOpen ? 'fas fa-times' : 'fas fa-bars'} />
-                <span></span>
-                <span></span>
             </div>
             <ul className={menuOpen ? "open" : ""}>
                 <li>

@@ -1,108 +1,102 @@
-/* *{
-  margin:0;
-  padding: 0;
-  font-family: 'Roboto', sans-serif;
-} */
-
 .app {
-  background-color: white;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  height: 100%;
-  width: 100%;
-}
-
-h1 {
-  color: #4b86b4;
-  font-size: 40px;
-  text-align: center;
-}
-
-p {
-  color: #777;
-  font-size: 18px;
-  font-weight: 300;
-  line-height: 24px;
-  margin-bottom: 0px;
-  text-align: center;
-  padding: 10px;
-  padding-left: 15%;
-  padding-right: 15%;
-}
-
-/* --- Header CSS --- */
-.header {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  padding-top: 15%;
-  width: 100%;
-  background-color: #adcbe3;
-  background-position: center;
-  background-size: cover;
-  position: relative;
+  background-color: var(--color-canvas);
+}
+
+.app > *:not(.navbar-container):not(.footer) {
+  flex: 1;
+}
+
+/* --- Hero header --- */
+.header {
+  background-color: var(--color-tint);
+}
+
+.header-inner {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 4rem;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 5rem 3rem;
+}
+
+.header .eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 1.25rem;
 }
 
 .header h1 {
-  color: white;
-  font-size: 75px;
-  text-shadow: 4px 4px #4b86b4;
-  text-align: center;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1.05;
 }
 
-#line {
-  color: white;
-  font-size: 24px;
-  text-shadow: 1px 1px #4b86b4;
-  text-align: center;
+.header-lede {
+  margin-top: 1.5rem;
+  max-width: 480px;
+  font-size: 1.15rem;
+  line-height: 1.5;
+  color: var(--color-body);
 }
-.social-links p {
+
+.header-actions {
   display: flex;
-  justify-content: center; /* Centers links horizontally */
-  gap: 15px; /* Adds space between icons */
-  margin-top: 10px;
-}
-
-.social-links a {
-  font-size: 24px; /* Adjust icon size */
-  color: black; /* Change color if needed */
-  text-decoration: none;
-}
-
-.social-links a:hover {
-  color: #0077b5; /* Change to LinkedIn blue or preferred hover color */
-}
-
-/* --- Footer CSS --- */
-
-
-
-
-/* @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
 }
 
-.App-link {
-  color: #61dafb;
+.header .social-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 2.5rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.header .social-links a {
+  font-size: 1.15rem;
+  color: var(--color-ink);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.header .social-links a:hover {
+  color: var(--color-accent);
+}
+
+.header .social-links .resume-link {
+  font-size: 0.85rem;
+  margin-left: 0.5rem;
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--color-border);
+}
+
+.header-image img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: var(--radius-image);
+  background-color: var(--color-canvas);
+}
+
+@media only screen and (max-width: 860px) {
+  .header-inner {
+    grid-template-columns: 1fr;
+    padding: 3rem 1.5rem;
+    gap: 2.5rem;
+    text-align: left;
   }
-  to {
-    transform: rotate(360deg);
+
+  .header-image {
+    order: -1;
+    max-width: 320px;
   }
-} */
+}

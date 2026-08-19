@@ -1,17 +1,29 @@
 import React from 'react';
 import './Projects.css';
+import SewingThread from '../components/SewingThread';
 
 function Projects() {
     return (
         <div className="projects-container">
-            <div className="projects-header">
-                <h1>Projects</h1>
-                <p>A collection of my technical and creative endeavors</p>
-            </div>
+            <section className="projects-intro">
+                <div className="projects-intro-inner">
+                    <div className="section-label">
+                        <span>Projects</span>
+                        <a href="/contact" className="arrow-link">Get in touch →</a>
+                    </div>
+                    <div className="projects-header">
+                        <h1>Selected work</h1>
+                        <p>A collection of my technical and creative endeavors</p>
+                    </div>
+                </div>
+            </section>
 
+            <section className="projects-body">
+            <div className="projects-body-inner">
+            <SewingThread />
             <div className="project-card">
                 <h2>Summer Project: Computational Sewing Patterns</h2>
-                
+
                 <div className="project-section">
                     <h3>Background</h3>
                     <p>
@@ -107,6 +119,8 @@ function Projects() {
             <div className="projects-footer">
                 <p>More projects coming soon...</p>
             </div>
+            </div>
+            </section>
         </div>
     );
 }

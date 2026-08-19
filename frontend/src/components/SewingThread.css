@@ -1,0 +1,34 @@
+.sewing-thread-stage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.sewing-thread-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    /* Explicit so a hovered image's CSS transform — which promotes it into
+       its own stacking context — can never outrank this by DOM order alone. */
+    z-index: 5;
+    /* Permanently on its own GPU layer, since this element carries the
+       <mask>. Safari has a compositing bug where nearby siblings can
+       briefly vanish when a masked element's layer is promoted/repainted
+       at the same moment a hover elsewhere triggers a transform. Keeping
+       it always layered avoids that promotion event happening on hover. */
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+@media only screen and (max-width: 860px) {
+    .sewing-thread-stage {
+        display: none;
+    }
+}

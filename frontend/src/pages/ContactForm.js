@@ -60,21 +60,23 @@ function ContactForm() {
 
     
     return (
-        <div className="contact-form">
-            <div className="social-links">
-                <p>Find me on my socials: 
-                    <a href="https://github.com/michelle-zhuang1"><i class="fab fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/michelle-zhuang"><i class="fa fa-linkedin in"></i></a>
-                    <a href="mailto: mzhuang5@gmail.com"><i class="far fa-envelope"></i></a>
-                </p>
+        <div className="contact-page">
+            <div className="contact-page-inner">
+            <div className="section-label">
+                <span>Contact</span>
+                <a href="/" className="arrow-link">Back home →</a>
             </div>
-            <h2>Or Contact Me Here:</h2>
-            {process.env.NODE_ENV === 'development' && (
-                <div style={{background: '#f0f0f0', padding: '10px', marginBottom: '10px', fontSize: '12px'}}>
-                    Debug Info: API URL = {process.env.REACT_APP_API_URL || "localhost:5000 (default)"}
+            <div className="contact-form">
+                <h1>Let&rsquo;s talk</h1>
+                <p className="contact-lede">
+                    Have a role, project, or question in mind? Send me a message and I&rsquo;ll get back to you soon.
+                </p>
+                <div className="social-links">
+                    <a href="https://github.com/michelle-zhuang1" aria-label="GitHub"><i className="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/michelle-zhuang" aria-label="LinkedIn"><i className="fa fa-linkedin"></i></a>
+                    <a href="mailto:mzhuang5@gmail.com" aria-label="Email"><i className="far fa-envelope"></i></a>
                 </div>
-            )}
-            <form onSubmit={handleSubmit}>  
+            <form onSubmit={handleSubmit}>
                 <input 
                     type="text"
                     id="name"
@@ -111,7 +113,9 @@ function ContactForm() {
                     {status.message}
                 </div>
             )}
-        </div> 
+            </div>
+            </div>
+        </div>
     );
 }
 
