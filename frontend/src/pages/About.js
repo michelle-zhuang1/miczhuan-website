@@ -34,10 +34,14 @@ const About = () => {
                             students.
                         </p>
                         <p>
+                            I&rsquo;m currently a Master&rsquo;s student in AI/ML for Engineering at the University of Washington, 
+                            channeling that same drive for learning into a focused transition toward backend and AI-agentic engineering. 
+                        </p>
+                        <p>
                             I have a strong technical foundation and a passion for creative problem-solving. I pride
                             myself on being a strong communicator and adaptable team player, navigating complex
                             projects with resilience and an open-minded approach. I&rsquo;m currently looking for
-                            [junior] software engineering roles where I can grow, contribute to impactful projects,
+                            backend and AI-focused software engineering roles where I can grow, contribute to impactful projects,
                             and continue learning cutting-edge technologies.
                         </p>
                     </div>
