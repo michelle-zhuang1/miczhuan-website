@@ -1,8 +1,7 @@
 import os
-# import boto3
+import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import psycopg2
 from dotenv import load_dotenv
 
 # Load environment variables (only for local development)
@@ -15,114 +14,23 @@ else:
 app = Flask(__name__)
 CORS(app, origins=["https://miczhuan-website.vercel.app", "http://localhost:3000", "https://miczhuan-website.onrender.com"])
 
-# Debug: Print all environment variables at startup
-print("=== ENVIRONMENT VARIABLES DEBUG ===")
-print(f"RENDER: {os.getenv('RENDER')}")
-print(f"DATABASE_URL: {'SET' if os.getenv('DATABASE_URL') else 'NOT SET'}")
-print(f"DB_NAME: {os.getenv('DB_NAME')}")
-print(f"DB_USER: {os.getenv('DB_USER')}")  
-print(f"DB_HOST: {os.getenv('DB_HOST')}")
-print(f"DB_PORT: {os.getenv('DB_PORT')}")
-print(f"DB_PASSWORD: {'SET' if os.getenv('DB_PASSWORD') else 'NOT SET'}")
-print("=== END DEBUG ===")
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
+CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "mzhuang5@gmail.com")
 
 @app.route("/debug-env", methods=["GET"])
 def debug_env():
     """Debug endpoint to check environment variables"""
     return jsonify({
         "render": os.getenv("RENDER"),
-        "database_url_set": bool(os.getenv("DATABASE_URL")),
-        "db_name": os.getenv("DB_NAME"),
-        "db_user": os.getenv("DB_USER"),
-        "db_host": os.getenv("DB_HOST"),
-        "db_port": os.getenv("DB_PORT"),
-        "db_password_set": bool(os.getenv("DB_PASSWORD"))
+        "resend_api_key_set": bool(RESEND_API_KEY),
+        "contact_email": CONTACT_EMAIL
     })
 
 @app.route("/", methods=["GET"])
 def health_check():
     return jsonify({"status": "API is running", "message": "Flask backend is healthy"}), 200
 
-@app.route("/contacts", methods=["GET"])
-def get_contacts():
-    """Debug endpoint to view all contacts"""
-    try:
-        conn, cursor = get_db_connection()
-        if not conn:
-            return jsonify({"error": "Database connection failed"}), 500
-            
-        cursor.execute("SELECT id, name, email, message, created_at FROM contacts ORDER BY created_at DESC")
-        contacts = cursor.fetchall()
-        
-        result = []
-        for contact in contacts:
-            result.append({
-                "id": contact[0],
-                "name": contact[1], 
-                "email": contact[2],
-                "message": contact[3],
-                "created_at": contact[4]
-            })
-        
-        cursor.close()
-        conn.close()
-        
-        return jsonify({
-            "contacts": result,
-            "count": len(result)
-        }), 200
-        
-    except Exception as e:
-        print(f"Error getting contacts: {e}")
-        return jsonify({"error": str(e)}), 500
-
-def get_db_connection():
-    try:
-        # Try DATABASE_URL first, then fall back to individual variables
-        database_url = os.getenv("DATABASE_URL")
-        
-        if database_url:
-            print(f"Using DATABASE_URL connection")
-            conn = psycopg2.connect(database_url)
-        else:
-            # Debug logging for individual variables
-            print(f"Using individual environment variables:")
-            print(f"  DB_NAME: {os.getenv('DB_NAME')}")
-            print(f"  DB_USER: {os.getenv('DB_USER')}")
-            print(f"  DB_HOST: {os.getenv('DB_HOST')}")
-            print(f"  DB_PORT: {os.getenv('DB_PORT', 5432)}")
-            print(f"  DB_PASSWORD: {'***' if os.getenv('DB_PASSWORD') else 'NOT SET'}")
-            
-            conn = psycopg2.connect(
-                dbname=os.getenv("DB_NAME"),
-                user=os.getenv("DB_USER"),
-                password=os.getenv("DB_PASSWORD"),
-                host=os.getenv("DB_HOST"),
-                port=os.getenv("DB_PORT", 5432))
-        cursor = conn.cursor()
-        
-        # Create table if it doesn't exist
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS contacts (
-                id SERIAL PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
-                email VARCHAR(255) NOT NULL,
-                message TEXT NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        ''')
-        conn.commit()
-        
-        # Check if table was created and count existing records
-        cursor.execute("SELECT COUNT(*) FROM contacts")
-        count = cursor.fetchone()[0]
-        print(f"Connected to PostgreSQL database! Current record count: {count}")
-        return conn, cursor
-    except Exception as e:
-        print(f"Error connecting to database: {e}")
-        return None, None
-
-# Route to insert contact form data into PostgreSQL
+# Route to email contact form submissions directly, via Resend
 @app.route("/contact", methods=["POST"])
 def submit_contact():
     data = request.get_json()
@@ -135,85 +43,38 @@ def submit_contact():
 
     if not name or not email or not message:
         return jsonify({"error": "Missing required fields"}), 400
-    
+
+    if not RESEND_API_KEY:
+        print("RESEND_API_KEY is not set")
+        return jsonify({"error": "Email service is not configured"}), 500
+
     try:
-        conn, cursor = get_db_connection()
-        if not conn or not cursor:
-            print("Failed to get database connection")
-            return jsonify({"error": "Database connection failed"}), 500
-            
-        print(f"Inserting contact: name={name}, email={email}, message={message[:50]}...")
-        cursor.execute("INSERT INTO contacts (name, email, message) VALUES (%s, %s, %s)", (name, email, message))
-        
-        # Verify the insert worked (PostgreSQL way)
-        cursor.execute("SELECT LASTVAL()")
-        row_id = cursor.fetchone()[0]
-        print(f"Inserted record with ID: {row_id}")
-        
-        conn.commit()
-        
-        # Double-check the record was saved
-        cursor.execute("SELECT COUNT(*) FROM contacts")
-        total_count = cursor.fetchone()[0]
-        print(f"Total records after insert: {total_count}")
-        
-        cursor.close()
-        conn.close()
-        return jsonify({"success": "Message received!", "record_id": row_id}), 200
-    
-    except Exception as e:
-        print(f"Error inserting contact form data: {e}")
-        import traceback
-        traceback.print_exc()
-        return jsonify({"error": str(e)}), 500
-"""
-Currently not in use
+        response = requests.post(
+            "https://api.resend.com/emails",
+            headers={
+                "Authorization": f"Bearer {RESEND_API_KEY}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "from": "Portfolio Contact Form <onboarding@resend.dev>",
+                "to": [CONTACT_EMAIL],
+                "reply_to": email,
+                "subject": f"New message from {name}",
+                "text": f"From: {name} <{email}>\n\n{message}"
+            },
+            timeout=10
+        )
 
-# Create an S3 client
-S3_BUCKET = os.getenv("AWS_S3_BUCKET")
-S3_REGION = os.getenv("AWS_REGION")
-s3 = boto3.client(
-    "s3",
-    aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-)
-print(f"Connected to S3 bucket: {S3_BUCKET}")
+        if response.status_code >= 400:
+            print(f"Resend error: {response.status_code} {response.text}")
+            return jsonify({"error": "Failed to send message"}), 502
 
-# Route to upload files via HTTP request
-@app.route("/upload", methods=["POST"])
-def upload_file():
-    conn, cursor = get_db_connection()
+        return jsonify({"success": "Message received!"}), 200
 
-    if "file" not in request.files:
-        print(f"Error getting request file")
-        return jsonify({"error": "No file part"}), 400
-
-    file = request.files["file"]
-    filename = file.filename
-
-    # Upload file to S3
-    s3.upload_fileobj(file, S3_BUCKET, filename, ExtraArgs={"ACL": "public-read"})
-
-    # Generate public URL
-    file_url = f"https://{S3_BUCKET}.s3.{S3_REGION}.amazonaws.com/{filename}" # URL Format Follows: https://<bucket-name>.s3.<region>.amazonaws.com/<filename>
-
-
-    # Save file metadata to PostgreSQL
-    cursor.execute("INSERT INTO images (filename, file_url) VALUES (%s, %s) RETURNING id", (filename, file_url))
-    conn.commit()
-    
-    return jsonify({"id": cursor.fetchone()[0], "filename": filename, "file_url": file_url})
-
-# Route to fetch all uploaded files
-@app.route("/files", methods=["GET"])
-def get_files():
-    conn, cursor = get_db_connection()
-    cursor.execute("SELECT id, filename, file_url FROM images")
-    files = cursor.fetchall()
-    return jsonify([{"id": row[0], "filename": row[1], "file_url": row[2]} for row in files]) 
-"""
+    except requests.RequestException as e:
+        print(f"Error sending email via Resend: {e}")
+        return jsonify({"error": "Failed to send message"}), 502
 
 if __name__ == "__main__":
-    import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)

@@ -1,6 +1,6 @@
-flask 
-flask_cors 
-psycopg2-binary
-gunicorn 
+flask
+flask_cors
+requests
+gunicorn
 boto3
 python-dotenv
