@@ -37,6 +37,38 @@
     padding: 3rem 3rem 6rem;
 }
 
+.project-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 2rem;
+}
+
+.project-tab {
+    appearance: none;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0 0 0.9rem;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--color-body);
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.project-tab:hover {
+    color: var(--color-ink);
+}
+
+.project-tab.active {
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+}
+
 .project-card {
     background-color: var(--color-tint);
     border-radius: var(--radius-card);
