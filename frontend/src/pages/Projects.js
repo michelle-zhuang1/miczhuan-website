@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import './Projects.css';
 import SewingThread from '../components/SewingThread';
+import swolematesToday from '../assets/swolemates/swolemates-desktop-today.jpg';
+import swolematesNutrition from '../assets/swolemates/swolemates-desktop-nutrition.jpg';
+import swolematesPlan from '../assets/swolemates/swolemates-desktop-plan.jpg';
+import swolematesPhoneToday from '../assets/swolemates/swolemates-mobile-today.png';
+import swolematesPhoneNutrition from '../assets/swolemates/swolemates-mobile-nutrition.png';
+import swolematesPhonePlan from '../assets/swolemates/swolemates-mobile-plan.png';
 
 function SewingPatternsProject() {
     return (
@@ -99,18 +105,84 @@ function SewingPatternsProject() {
     );
 }
 
-// PLACEHOLDER — swap in real project content once it's ready. Only exists
-// so the tab-switching UI options below have something to switch between.
-function PlaceholderProject({ label }) {
+function SwolematesProject() {
     return (
-        <div className="project-section">
-            <h3>Overview</h3>
-            <p>
-                Add a short description of {label} here — what it is, the problem it solves,
-                and the tools or techniques you used.
-            </p>
-            <div className="image-placeholder">Add project images here</div>
-        </div>
+        <>
+            <div className="project-section">
+                <h3>Background</h3>
+                <p>
+                    Swolemates is a full-stack fitness and nutrition tracker built with FastAPI,
+                    PostgreSQL/SQLAlchemy, and React. The goal was to let a web client and an AI
+                    agent drive the same application without duplicating business logic between
+                    them.
+                </p>
+                <p>
+                    Instead of bolting an assistant onto a finished app, the backend was designed
+                    around a dual-transport service layer: HTTP requests from the web client and
+                    tool calls from the agent both land in the same services, behind the same
+                    authorization rules.
+                </p>
+
+                <div className="image-gallery single-image">
+                    <div className="image-container">
+                        <img src={swolematesToday} alt="Swolemates Today view showing calories and workouts left, progress rings, a month calendar, and the week's planned workouts" />
+                        <p className="image-caption">Today: what's left to eat and lift, and where the week stands</p>
+                    </div>
+                </div>
+            </div>
+
+            <div className="project-section">
+                <h3>Results</h3>
+                <p>
+                    The MCP server exposes 30+ tools covering workout logging, reusable templates,
+                    and nutrition lookup, so an AI agent can operate the app end to end. Both
+                    transports are secured with WorkOS AuthKit, and the whole system is deployed on
+                    Railway and in daily use.
+                </p>
+
+                <div className="image-gallery">
+                    <div className="image-container">
+                        <img src={swolematesNutrition} alt="Swolemates Nutrition view with macro progress bars, the day's food log, a food search, and saved meals" />
+                        <p className="image-caption">Nutrition: macro targets, the day's log, and reusable saved meals</p>
+                    </div>
+                    <div className="image-container">
+                        <img src={swolematesPlan} alt="Swolemates Plan view showing a weekly lifting pattern, the next seven days generated from it, and saved workout templates" />
+                        <p className="image-caption">Plan: one weekly pattern generates the next seven days</p>
+                    </div>
+                </div>
+
+                <div className="image-gallery phone-shots">
+                    <div className="image-container">
+                        <img src={swolematesPhoneToday} alt="Swolemates Today view on a phone screen" />
+                        <p className="image-caption">Today</p>
+                    </div>
+                    <div className="image-container">
+                        <img src={swolematesPhoneNutrition} alt="Swolemates Nutrition view on a phone screen" />
+                        <p className="image-caption">Nutrition</p>
+                    </div>
+                    <div className="image-container">
+                        <img src={swolematesPhonePlan} alt="Swolemates Plan view on a phone screen" />
+                        <p className="image-caption">Plan</p>
+                    </div>
+                </div>
+                <p className="image-caption">The same three views on mobile, where most logging actually happens.</p>
+
+                <div className="results-grid">
+                    <div className="result-item">
+                        <h4>Dual-Transport Backend</h4>
+                        <p>One FastAPI service layer shared by the web client and the AI agent, with a single authorization path</p>
+                    </div>
+                    <div className="result-item">
+                        <h4>MCP Tool Surface</h4>
+                        <p>30+ tools for workout logging, templates, and nutrition lookup, secured with WorkOS AuthKit</p>
+                    </div>
+                    <div className="result-item">
+                        <h4>Production Debugging</h4>
+                        <p>Diagnosed and fixed a database race condition causing duplicate writes and a staging/production token-refresh bug</p>
+                    </div>
+                </div>
+            </div>
+        </>
     );
 }
 
@@ -121,14 +193,9 @@ const PROJECTS = [
         Body: SewingPatternsProject,
     },
     {
-        id: 'project-two',
-        title: 'Project Two',
-        Body: () => <PlaceholderProject label="Project Two" />,
-    },
-    {
-        id: 'project-three',
-        title: 'Project Three',
-        Body: () => <PlaceholderProject label="Project Three" />,
+        id: 'swolemates',
+        title: 'Swolemates: Fitness & Nutrition Tracker',
+        Body: SwolematesProject,
     },
 ];
 

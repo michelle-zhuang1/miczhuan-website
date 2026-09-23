@@ -1,13 +1,19 @@
 {
   "files": {
-    "main.css": "./static/css/main.109741e2.css",
-    "main.js": "./static/js/main.315ebd39.js",
+    "main.css": "./static/css/main.743862f0.css",
+    "main.js": "./static/js/main.db7ab3d6.js",
+    "static/media/swolemates-mobile-plan.png": "./static/media/swolemates-mobile-plan.11bb06da4942c4302644.png",
+    "static/media/swolemates-mobile-nutrition.png": "./static/media/swolemates-mobile-nutrition.f72ae57ad254848daab2.png",
+    "static/media/swolemates-mobile-today.png": "./static/media/swolemates-mobile-today.854d7bc812c5041b3aca.png",
+    "static/media/swolemates-desktop-plan.jpg": "./static/media/swolemates-desktop-plan.b9126e8aae5f50ce59c9.jpg",
+    "static/media/swolemates-desktop-today.jpg": "./static/media/swolemates-desktop-today.979cc7ad94554830801b.jpg",
+    "static/media/swolemates-desktop-nutrition.jpg": "./static/media/swolemates-desktop-nutrition.4ef617b80c85b6196206.jpg",
     "index.html": "./index.html",
-    "main.109741e2.css.map": "./static/css/main.109741e2.css.map",
-    "main.315ebd39.js.map": "./static/js/main.315ebd39.js.map"
+    "main.743862f0.css.map": "./static/css/main.743862f0.css.map",
+    "main.db7ab3d6.js.map": "./static/js/main.db7ab3d6.js.map"
   },
   "entrypoints": [
-    "static/css/main.109741e2.css",
-    "static/js/main.315ebd39.js"
+    "static/css/main.743862f0.css",
+    "static/js/main.db7ab3d6.js"
   ]
 }

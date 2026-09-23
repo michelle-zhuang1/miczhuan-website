@@ -18,11 +18,12 @@ const About = () => {
                         <p>
                             Hi! I&rsquo;m Michelle Zhuang. I&rsquo;m a former software engineer at Cisco on the
                             Capital IT team, supporting the financial payment solutions for leasing and loans of
-                            Cisco hardware and software products. Utilizing Agile methods, I collaborate cross
-                            functionally with Finance, Operations, and Accounting teams to deliver key business
-                            requirements. Built and deployed automated workflows using UiPath to improve test
-                            automation and efficiency by 10%. Developed and implemented PL/SQL packages to fetch
-                            contract details for data ingestion and integration with InfoLease.
+                            Cisco hardware and software products. Using Agile methods, I collaborated cross
+                            functionally with Finance, Operations, and Accounting teams to deliver scalable data
+                            solutions supporting $11.8 billion in bookings. I developed PL/SQL packages that
+                            automated ingestion of leasing data and integration with InfoLease, improving data
+                            integration efficiency by 20%, and built automated testing workflows in UiPath that
+                            covered 60 test cases and improved deployment reliability across environments.
                         </p>
                         <p>
                             I graduated from Swarthmore College with a double major in Computer Science and Computer
@@ -46,7 +47,7 @@ const About = () => {
                         </p>
                     </div>
                     <a
-                        href="https://miczhuan-website.s3.us-east-2.amazonaws.com/MZhuangResume_FT.pdf"
+                        href="/MZhuang_Resume.pdf"
                         className="outlined-action"
                     >
                         View my resume →

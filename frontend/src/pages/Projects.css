@@ -178,11 +178,23 @@
     z-index: 10;
 }
 
-.image-caption {
+/* Scoped past `.project-section p`, which would otherwise left-align these. */
+.project-section .image-caption {
     font-size: 0.85rem;
     color: var(--color-body);
     margin-top: 0.5rem;
     text-align: center;
+}
+
+.image-gallery.phone-shots {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    max-width: 760px;
+    margin: 1.5rem auto 0.5rem;
+}
+
+.image-gallery.phone-shots .image-container img {
+    max-width: 220px;
+    border: 1px solid var(--color-border);
 }
 
 .image-placeholder {

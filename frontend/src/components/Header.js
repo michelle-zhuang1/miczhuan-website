@@ -7,7 +7,7 @@ const Header = () => (
           <p className="eyebrow">Software Engineer</p>
           <h1>Hi, I&rsquo;m Michelle Zhuang.</h1>
           <p className="header-lede">
-            A recent Swarthmore College graduate in Engineering and Computer Science,
+            A master&rsquo;s student at the University of Washington,
             building software at the intersection of infrastructure and craft.
           </p>
           <div className="header-actions">
@@ -18,7 +18,7 @@ const Header = () => (
             <a href="https://www.linkedin.com/in/michelle-zhuang" aria-label="LinkedIn"><i className="fa fa-linkedin"></i></a>
             <a href="mailto:mzhuang5@gmail.com" aria-label="Email"><i className="far fa-envelope"></i></a>
             <a
-              href="https://miczhuan-website.s3.us-east-2.amazonaws.com/MZhuangResume_FT.pdf"
+              href="/MZhuang_Resume.pdf"
               className="arrow-link resume-link"
             >
               Resume
