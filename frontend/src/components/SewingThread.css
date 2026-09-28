@@ -18,6 +18,90 @@
     /* Explicit so a hovered image's CSS transform — which promotes it into
        its own stacking context — can never outrank this by DOM order alone. */
     z-index: 5;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sewing-thread-svg path {
+    fill: none;
+}
+
+.st-stitch {
+    stroke: var(--color-accent);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.st-stitch-sheen {
+    stroke: #ffffff;
+    stroke-opacity: 0.45;
+    stroke-width: 0.9;
+    stroke-linecap: round;
+    stroke-dasharray: 1.6 2.4;
+    transform: translate(-0.4px, -0.5px);
+}
+
+.st-stitch-shadow {
+    stroke: var(--color-ink);
+    stroke-opacity: 0.16;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.st-under {
+    stroke: var(--color-accent);
+    stroke-opacity: 0.22;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-dasharray: 2 2.5;
+}
+
+/* Zero-length segments + round caps = needle-hole dots. */
+.st-holes {
+    stroke: var(--color-ink);
+    stroke-opacity: 0.22;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+}
+
+.st-ripple {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 0.8;
+}
+
+.sewing-thread-svg .st-needle {
+    fill: url(#needleSteel);
+    stroke: #6b747b;
+    stroke-width: 0.4;
+    stroke-linejoin: round;
+}
+
+.sewing-thread-svg .st-needle-shadow {
+    fill: var(--color-ink);
+    fill-opacity: 0.16;
+}
+
+.st-needle-glint {
+    stroke: #ffffff;
+    stroke-opacity: 0.9;
+    stroke-width: 0.55;
+    stroke-linecap: round;
+}
+
+.sewing-thread-svg .st-eye {
+    fill: var(--color-canvas);
+    stroke: #6b747b;
+    stroke-width: 0.35;
+}
+
+.st-tail {
+    stroke: var(--color-accent);
+    stroke-opacity: 0.85;
+    stroke-width: 1.6;
+    stroke-linecap: round;
 }
 
 @media only screen and (max-width: 860px) {
